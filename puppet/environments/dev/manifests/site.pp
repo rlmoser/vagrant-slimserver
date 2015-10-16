@@ -9,12 +9,16 @@ package { 'git':
 	ensure => present,
 }
 
-vcsrepo { '/opt/repo/slimserver-platforms':
-	ensure => present,
+vcsrepo { '/vagrant/puppet/environments/dev/modules/squeezeboxserver':
+	ensure   => latest,
+	depth    => 1,
 	provider => git,
-	source => 'https://github.com/Logitech/slimserver-platforms.git',
-	revision => 'public/7.9',
-	depth => 1,
-	require => Package['git'],
+	source   => 'https://github.com/rlmoser/puppet-squeezeboxserver.git',
+	require  => Package['git'],
 }
 
+if defined ('squeezeboxserver::install::vcs') {
+  class {'squeezeboxserver::install::vcs': 
+    require => Vcsrepo['/vagrant/puppet/environments/dev/modules/squeezeboxserver'],
+  }
+}

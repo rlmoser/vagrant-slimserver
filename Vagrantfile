@@ -9,6 +9,11 @@ if [ ! -d "$modulepath/vcsrepo" ]
 then
   puppet module install puppetlabs-vcsrepo --target-dir=$modulepath
 fi
+# for when I get around to publishing the module on Puppetforge
+#if [ ! -d "$modulepath/squeezeboxserver" ]
+#then
+#  puppet module install puppetlabs-vcsrepo --target-dir=$modulepath
+#fi
 SCRIPT
 
   if ['d7','d8','u12','u14','u15'].include?(ARGV[1])
