@@ -16,7 +16,7 @@ fi
 #fi
 SCRIPT
 
-  if ['d7','d8','u12','u14','u15'].include?(ARGV[1])
+  if ['d6','d7','d8','u12','u14','u15'].include?(ARGV[1])
     config.vm.provision "fix-no-tty", type: "shell" do |s|
       s.privileged = false
       s.inline = "sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile"
@@ -25,10 +25,21 @@ SCRIPT
   if ARGV[1] == 'd8'
     config.vm.provision "puppet-apt-get", type: "shell", inline: "apt-get install -y puppet"
   end
+  if ARGV[1] == 'f20'
+    config.vm.provision "puppet-yum", type: "shell", inline: "yum install -y puppet"
+  end
   config.vm.provision "module-check", type: "shell", inline: $modulescript
-  config.vm.provision "puppet" do |puppet|
-    puppet.environment_path = 'puppet/environments'
-    puppet.environment = 'dev'
+  if ['f20'].include?(ARGV[1])
+    config.vm.provision "puppet" do |puppet|
+      puppet.module_path    = 'puppet/environments/dev/modules'
+      puppet.manifests_path = 'puppet/environments/dev/manifests'
+      puppet.manifest_file  = 'site.pp'
+    end
+  else 
+    config.vm.provision "puppet" do |puppet|
+      puppet.environment_path = 'puppet/environments'
+      puppet.environment = 'dev'
+    end
   end
 
   config.vm.synced_folder "repo", "/opt/repo"
@@ -41,6 +52,9 @@ SCRIPT
   end
   config.vm.define :c7, autostart: false do |c7|
     c7.vm.box = "puppetlabs/centos-7.0-64-puppet"
+  end
+  config.vm.define :f20, autostart: false do |f20|
+    f20.vm.box = "boxcutter/fedora20"
   end
   config.vm.define :d6, autostart: false do |d6|
     d6.vm.box = "puppetlabs/debian-6.0.10-64-puppet"
