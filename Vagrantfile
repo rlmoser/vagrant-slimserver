@@ -25,11 +25,11 @@ SCRIPT
   if ARGV[1] == 'd8'
     config.vm.provision "puppet-apt-get", type: "shell", inline: "apt-get install -y puppet"
   end
-  if ARGV[1] == 'f20'
+  if ['f20','build'].include?(ARGV[1])
     config.vm.provision "puppet-yum", type: "shell", inline: "yum install -y puppet"
   end
   config.vm.provision "module-check", type: "shell", inline: $modulescript
-  if ['f20'].include?(ARGV[1])
+  if ['f20','build'].include?(ARGV[1])
     config.vm.provision "puppet" do |puppet|
       puppet.module_path    = 'puppet/environments/dev/modules'
       puppet.manifests_path = 'puppet/environments/dev/manifests'
@@ -52,6 +52,10 @@ SCRIPT
   end
   config.vm.define :c7, autostart: false do |c7|
     c7.vm.box = "puppetlabs/centos-7.0-64-puppet"
+  end
+  config.vm.define :build, autostart: false do |build|
+    build.vm.box = "boxcutter/fedora20"
+    build.vm.hostname = "builder.slimdevices.com"
   end
   config.vm.define :f20, autostart: false do |f20|
     f20.vm.box = "boxcutter/fedora20"
