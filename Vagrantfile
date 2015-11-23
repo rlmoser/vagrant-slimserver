@@ -9,10 +9,14 @@ if [ ! -d "$modulepath/vcsrepo" ]
 then
   puppet module install puppetlabs-vcsrepo --target-dir=$modulepath
 fi
+if [ ! -d "$modulepath/alternatives" ]
+then
+  puppet module install adrien-alternatives --target-dir=$modulepath
+fi
 # for when I get around to publishing the module on Puppetforge
 #if [ ! -d "$modulepath/squeezeboxserver" ]
 #then
-#  puppet module install puppetlabs-vcsrepo --target-dir=$modulepath
+#  puppet module install rlmoser-squeezeboxserver --target-dir=$modulepath
 #fi
 SCRIPT
 

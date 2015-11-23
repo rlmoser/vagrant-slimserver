@@ -42,6 +42,11 @@ if $::fqdn == 'builder.slimdevices.com' {
   package { 'rpm-build':
     ensure => present,
   }
+  # make sure we use the faster fakeroot
+  alternatives { 'fakeroot':
+    path    => '/usr/bin/fakeroot-sysv',
+    require => Package['fakeroot'],
+  }
 }
 
 #if defined ('squeezeboxserver::install::vcs') {
